@@ -1,0 +1,53 @@
+# Bloquear Codigo
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+# Quitar Extencion .html
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [QSA,L]
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule !.*\.html$ %{REQUEST_FILENAME}.html [QSA,L]
+# Redirecionar a www
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+# Redirecion de Errores
+ErrorDocument 404 https://www.unapp.tech/404.html
+# Evitar Robo de Contenido
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https://unapp.tech/.*$ [NC] [OR]
+RewriteCond %{HTTP_REFERER} !^https://www.unapp.tech/.*$ [NC] [OR]
+RewriteRule .*\.(gif|GIF|jpg|JPG|bmp|BMP|wav|mp3|wmv|avi|mpeg)$ - [F]
+# Comprimir Archivos
+<IfModule mod_gzip.c>
+mod_gzip_on Yes
+mod_gzip_item_include file .html$
+mod_gzip_item_include file .php$
+mod_gzip_item_include file .css$
+mod_gzip_item_include file .js$
+mod_gzip_item_include mime ^application/javascript$
+mod_gzip_item_include mime ^application/x-javascript$
+mod_gzip_item_include mime ^text/.*
+mod_gzip_item_include handler ^application/x-httpd-php
+mod_gzip_item_exclude mime ^image/.*
+</IfModule>
+# Precargar Pagina
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType image/gif A432000
+ExpiresByType image/jpg A432000
+ExpiresByType image/jpeg A432000
+ExpiresByType image/png A432000
+ExpiresByType image/ico A432000
+ExpiresByType image/bmp A432000
+ExpiresByType text/css A432000
+ExpiresByType text/javascript A432000
+ExpiresByType application/javascript A432000
+ExpiresByType application/x-javascript A432000
+</ifmodule>
+#opción de descargar los archivos multimedia
+AddType application/octet-stream .avi
+AddType application/octet-stream .mpg
+AddType application/octet-stream .wmv
+AddType application/octet-stream .mp3
