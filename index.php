@@ -1,3 +1,15 @@
+<?php 
+$dbHost = 'localhost';
+$dbUsername = '';
+$dbPassword = '';
+$dbName = '';
+
+$db = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
+
+if ($db->connect_error) {
+    die("Unable to connect database: " . $db->connect_error);
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,24 +44,26 @@
         </form>
       </div>
     </nav> 
-  <br><br><br>
-<div style="max-width:25%;transform: translate(150%);">
-  <form class="form-signin" method="POST" action="">
-      <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-      <label for="inputEmail" class="sr-only">Email</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-      <br>
-      <label for="inputPassword" class="sr-only">Contraceña</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Contraceña" required="">
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Recordarme
-        </label>
+  <br><br>
+  <div class="apps">
+    <?php 
+        // Get products from database 
+        $result = $db->query("SELECT * FROM apps ORDER BY RAND() DESC LIMIT 40"); 
+        if($result->num_rows > 0){  
+            while($row = $result->fetch_assoc()){
+        ?> 
+      <div class="card" style="width: 18rem;">
+        <a href="info.php?&appid=<?php echo $row["id"]; ?>"><img class="card-img-top" src="images/<?php echo $row["img"]; ?>" alt="<?php echo $row["appname"]; ?>"></a>
+              <div class="card-body">
+                 <h5 class="card-title"><?php echo $row["appname"]; ?></h5>
+            <a href="#" class="btn btn-primary">Descargar</a>
+
+         </div>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">© 2020</p>
-    </form>
-</div>
+        <?php } }else{ ?>
+        <p>Error: no hay apps agregadas </p>
+        <?php } ?></div>
+  </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
